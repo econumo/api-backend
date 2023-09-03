@@ -8,13 +8,11 @@ use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\CategoryRepositoryInterface;
+use App\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
+use App\Infrastructure\Doctrine\Repository\Traits\SaveEntityTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
-use Ramsey\Uuid\Uuid;
-use RuntimeException;
 
 /**
  * @method Category|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,17 +22,11 @@ use RuntimeException;
  */
 class CategoryRepository extends ServiceEntityRepository implements CategoryRepositoryInterface
 {
+    use NextIdentityTrait;
+    use SaveEntityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Category::class);
-    }
-
-    public function getNextIdentity(): Id
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $uuid = Uuid::uuid4();
-
-        return new Id($uuid->toString());
     }
 
     /**
@@ -78,22 +70,6 @@ DQL;
         }
 
         return $item;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function save(array $categories): void
-    {
-        try {
-            foreach ($categories as $category) {
-                $this->getEntityManager()->persist($category);
-            }
-
-            $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
     }
 
     public function getReference(Id $id): Category

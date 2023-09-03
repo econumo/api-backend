@@ -24,6 +24,7 @@ doctrine:
             currency_code_type: App\Infrastructure\Doctrine\Type\CurrencyCodeType
             payee_name_type: App\Infrastructure\Doctrine\Type\PayeeNameType
             tag_name_type: App\Infrastructure\Doctrine\Type\TagNameType
+            budget_name_type: App\Infrastructure\Doctrine\Type\BudgetNameType
         server_version: 13
 
     orm:

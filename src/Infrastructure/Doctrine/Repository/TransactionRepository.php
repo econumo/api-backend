@@ -11,14 +11,12 @@ use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\TransactionRepositoryInterface;
+use App\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
+use App\Infrastructure\Doctrine\Repository\Traits\SaveEntityTrait;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
-use Ramsey\Uuid\Uuid;
-use RuntimeException;
 
 /**
  * @method Transaction|null find($id, $lockMode = null, $lockVersion = null)
@@ -28,17 +26,12 @@ use RuntimeException;
  */
 class TransactionRepository extends ServiceEntityRepository implements TransactionRepositoryInterface
 {
+    use NextIdentityTrait;
+    use SaveEntityTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Transaction::class);
-    }
-
-    public function getNextIdentity(): Id
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $uuid = Uuid::uuid4();
-
-        return new Id($uuid->toString());
     }
 
     /**
@@ -53,22 +46,6 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->orderBy('t.spentAt', Criteria::DESC)
             ->getQuery()
             ->getResult();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function save(array $transactions): void
-    {
-        try {
-            foreach ($transactions as $transaction) {
-                $this->getEntityManager()->persist($transaction);
-            }
-
-            $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
     }
 
     /**
@@ -108,6 +85,7 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
                     break;
                 }
             }
+
             if (!$found) {
                 $filteredAccounts[] = $account;
             }
@@ -157,5 +135,62 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->setParameter('lastUpdate', $lastUpdate);
 
         return $query->getQuery()->getResult();
+    }
+
+    public function calculateTotalIncome(Id $userId, DateTimeInterface $dateStart, DateTimeInterface $dateEnd): float
+    {
+        $result = $this->getEntityManager()
+            ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.type = 1 AND t.user = :user AND t.spentAt >= :dateStart AND t.spentAt < :dateEnd')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
+            ->setParameter('dateStart', $dateStart)
+            ->setParameter('dateEnd', $dateEnd)
+            ->getSingleScalarResult();
+        return (float)$result;
+    }
+
+    public function calculateTotalExpenses(Id $userId, DateTimeInterface $dateStart, DateTimeInterface $dateEnd): float
+    {
+        $result = $this->getEntityManager()
+            ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.type = 0 AND t.user = :user AND t.spentAt >= :dateStart AND t.spentAt < :dateEnd')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
+            ->setParameter('dateStart', $dateStart)
+            ->setParameter('dateEnd', $dateEnd)
+            ->getSingleScalarResult();
+        return (float)$result;
+    }
+
+    public function calculateAmount(
+        array $categoryIds,
+        array $tagIds,
+        bool $excludeTags,
+        DateTimeInterface $dateStart,
+        DateTimeInterface $dateEnd
+    ): float {
+        if ($tagIds === []) {
+            $result = $this->getEntityManager()
+                ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.category IN (:categoryIds) AND t.spentAt >= :dateStart AND t.spentAt < :dateEnd')
+                ->setParameter('categoryIds', $categoryIds)
+                ->setParameter('dateStart', $dateStart)
+                ->setParameter('dateEnd', $dateEnd)
+                ->getSingleScalarResult();
+        } elseif ($excludeTags) {
+            $result = $this->getEntityManager()
+                ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.category IN (:categoryIds) AND t.tag IN (:tagIds) AND t.spentAt >= :dateStart AND t.spentAt < :dateEnd')
+                ->setParameter('tagIds', $tagIds)
+                ->setParameter('categoryIds', $categoryIds)
+                ->setParameter('dateStart', $dateStart)
+                ->setParameter('dateEnd', $dateEnd)
+                ->getSingleScalarResult();
+        } else {
+            $result = $this->getEntityManager()
+                ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.category IN (:categoryIds) AND t.tag NOT IN (:tagIds) AND t.spentAt >= :dateStart AND t.spentAt < :dateEnd')
+                ->setParameter('tagIds', $tagIds)
+                ->setParameter('categoryIds', $categoryIds)
+                ->setParameter('dateStart', $dateStart)
+                ->setParameter('dateEnd', $dateEnd)
+                ->getSingleScalarResult();
+        }
+
+        return (float)$result;
     }
 }

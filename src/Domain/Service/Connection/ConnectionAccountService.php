@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Service\Connection;
 
+use Throwable;
 use App\Domain\Entity\ValueObject\AccountUserRole;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
@@ -39,7 +40,7 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
             $this->accountAccessRepository->delete($accountAccess);
 
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }
@@ -89,7 +90,7 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
             $accountAccess->updateRole($role);
             $this->accountAccessRepository->save([$accountAccess]);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }

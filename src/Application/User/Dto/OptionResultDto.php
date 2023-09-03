@@ -24,5 +24,5 @@ class OptionResultDto
      * @var string|null
      * @OA\Property(example="USD")
      */
-    public ?string $value;
+    public ?string $value = null;
 }

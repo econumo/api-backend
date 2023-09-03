@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Service;
 
+use Throwable;
 use App\Domain\Entity\Transaction;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Factory\TransactionFactoryInterface;
@@ -36,7 +37,7 @@ class TransactionService implements TransactionServiceInterface
             }
 
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }
@@ -73,7 +74,7 @@ class TransactionService implements TransactionServiceInterface
             }
 
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }
@@ -96,13 +97,13 @@ class TransactionService implements TransactionServiceInterface
 
             $this->transactionRepository->delete($transaction);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }
     }
 
-    public function updateBalance(Id $accountId, float $correction, \DateTimeInterface $updatedAt, string $comment = ''): Transaction
+    public function updateBalance(Id $accountId, float $correction, DateTimeInterface $updatedAt, string $comment = ''): Transaction
     {
         $this->antiCorruptionService->beginTransaction();
         try {
@@ -112,7 +113,7 @@ class TransactionService implements TransactionServiceInterface
             $account->applyTransaction($transaction);
             $this->accountRepository->save([$account]);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }
@@ -138,6 +139,7 @@ class TransactionService implements TransactionServiceInterface
                 $excludeAccountIds[] = $account->getId();
                 continue;
             }
+
             foreach ($folders as $folder) {
                 if ($folder->containsAccount($account) && !$folder->isVisible()) {
                     $excludeAccountIds[] = $account->getId();

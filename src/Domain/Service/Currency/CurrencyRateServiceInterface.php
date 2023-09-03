@@ -14,7 +14,7 @@ interface CurrencyRateServiceInterface
      * @param \DateTimeInterface $dateTime
      * @return array|CurrencyRate[]
      */
-    public function getCurrencyRates(\DateTimeInterface $dateTime): array;
+    public function getCurrencyRates(DateTimeInterface $dateTime): array;
 
     /**
      * @return array|CurrencyRate[]

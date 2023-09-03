@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity\ValueObject;
 
+use Stringable;
 use DomainException;
 use JsonSerializable;
 
-final class CategoryType implements JsonSerializable, \Stringable
+final class CategoryType implements JsonSerializable, Stringable
 {
     /**
      * @var int
@@ -37,7 +38,7 @@ final class CategoryType implements JsonSerializable, \Stringable
         self::INCOME_ALIAS => self::INCOME
     ];
 
-    private int $value;
+    private readonly int $value;
 
     public static function createFromAlias(string $alias): self
     {

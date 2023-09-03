@@ -27,6 +27,7 @@ class CurrentUserToDtoResultAssembler
             $dto->options[] = $tmp;
             $options[$option->getName()] = $option->getValue();
         }
+
         $dto->currency = $options[UserOption::CURRENCY] ?? UserOption::DEFAULT_CURRENCY;
         $dto->reportPeriod = ($options[UserOption::REPORT_PERIOD] ?? UserOption::DEFAULT_REPORT_PERIOD);
 

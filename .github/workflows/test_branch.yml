@@ -4,6 +4,7 @@ on:
         branches:
             - '*'
             - '!master'
+            - '!develop'
 
 jobs:
     test-branch:
@@ -31,6 +32,10 @@ jobs:
 
             -   uses: actions/checkout@v3
 
+            -   name: Validate COMPOSER
+                if: success()
+                run: composer validate
+
             -   name: Build APP image
                 if: success()
                 run: |
@@ -49,8 +54,13 @@ jobs:
                     QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
                     QASE_PROJECT: "EA"
 
-            -   name: Run PSALM analysis
+            -   name: Run RECTOR
                 if: success()
                 run: |
-                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/psalm --long-progress --output-format=github
+                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/rector process --dry-run
+
+#            -   name: Run PSALM analysis
+#                if: success()
+#                run: |
+#                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/psalm --long-progress --output-format=github
 

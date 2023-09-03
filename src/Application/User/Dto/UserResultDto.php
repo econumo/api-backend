@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "avatar", "name", "email"}
+ *     required={"id", "avatar", "name"}
  * )
  */
 class UserResultDto

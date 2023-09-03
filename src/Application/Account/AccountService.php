@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Account;
 
+use DateTimeImmutable;
 use App\Application\Account\Assembler\CreateAccountV1ResultAssembler;
 use App\Application\Account\Assembler\DeleteAccountV1ResultAssembler;
 use App\Application\Account\Assembler\UpdateAccountV1ResultAssembler;
@@ -75,7 +76,7 @@ class AccountService
         }
 
         $this->accountService->update($userId, $accountId, new AccountName($dto->name), new Icon($dto->icon));
-        $updatedAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
+        $updatedAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
         $transaction = $this->accountService->updateBalance($accountId, $dto->balance, $updatedAt, $this->translator->trans('account.correction.message'));
         $account = $this->accountRepository->get($accountId);
         return $this->updateAccountV1ResultAssembler->assemble($dto, $userId, $account, $transaction);

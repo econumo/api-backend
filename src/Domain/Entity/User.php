@@ -209,6 +209,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return new CurrencyCode(UserOption::DEFAULT_CURRENCY);
     }
 
+    public function getReportPeriod(): ReportPeriod
+    {
+        foreach ($this->options as $option) {
+            if ($option->getName() === UserOption::REPORT_PERIOD) {
+                return new ReportPeriod($option->getValue());
+            }
+        }
+
+        return new ReportPeriod(UserOption::DEFAULT_REPORT_PERIOD);
+    }
+
     public function updateCurrency(CurrencyCode $currencyCode): void
     {
         foreach ($this->options as $option) {

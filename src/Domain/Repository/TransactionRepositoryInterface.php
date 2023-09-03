@@ -18,9 +18,9 @@ interface TransactionRepositoryInterface
     public function findByAccountId(Id $accountId): array;
 
     /**
-     * @param Transaction[] $transactions
+     * @param Transaction[] $items
      */
-    public function save(array $transactions): void;
+    public function save(array $items): void;
 
     /**
      * @param Id[] $excludeAccounts
@@ -38,4 +38,10 @@ interface TransactionRepositoryInterface
     public function delete(Transaction $transaction): void;
 
     public function replaceCategory(Id $oldCategoryId, Id $newCategoryId): void;
+
+    public function calculateTotalIncome(Id $userId, DateTimeInterface $dateStart, DateTimeInterface $dateEnd): float;
+
+    public function calculateTotalExpenses(Id $userId, DateTimeInterface $dateStart, DateTimeInterface $dateEnd): float;
+
+    public function calculateAmount(array $categoryIds, array $tagIds, bool $excludeTags, DateTimeInterface $dateStart, DateTimeInterface $dateEnd): float;
 }

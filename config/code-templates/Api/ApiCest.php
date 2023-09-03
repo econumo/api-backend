@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace _CG_APPROOT_\Tests\api\_CG_VERSION_LOWER_\_CG_MODULE_LOWER_;
 
+use Codeception\Exception\ModuleException;
 use _CG_APPROOT_\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
@@ -12,7 +13,7 @@ class _CG_ACTION__CG_SUBJECT_Cest
     private string $url = '_CG_URL_';
 
     /**
-     * @throws \Codeception\Exception\ModuleException
+     * @throws ModuleException
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
@@ -22,7 +23,7 @@ class _CG_ACTION__CG_SUBJECT_Cest
     }
 
     /**
-     * @throws \Codeception\Exception\ModuleException
+     * @throws ModuleException
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
@@ -32,7 +33,7 @@ class _CG_ACTION__CG_SUBJECT_Cest
     }
 
     /**
-     * @throws \Codeception\Exception\ModuleException
+     * @throws ModuleException
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
@@ -41,7 +42,7 @@ class _CG_ACTION__CG_SUBJECT_Cest
     }
 
     /**
-     * @throws \Codeception\Exception\ModuleException
+     * @throws ModuleException
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {

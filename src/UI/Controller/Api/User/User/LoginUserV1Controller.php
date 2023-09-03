@@ -59,7 +59,7 @@ class LoginUserV1Controller extends AbstractController
      * @throws ValidationException
      */
     #[Route(path: '/api/v1/user/login-user', methods: ['POST'])]
-    public function __invoke(Request $request): Response
+    public function __invoke() : Response
     {
         /** @var User $user */
         $user = $this->getUser();

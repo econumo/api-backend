@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Service;
 
+use Throwable;
 use App\Domain\Entity\User;
 use App\Domain\Entity\UserOption;
 use App\Domain\Entity\ValueObject\CurrencyCode;
@@ -56,7 +57,7 @@ class UserService implements UserServiceInterface
             );
 
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }
@@ -84,7 +85,7 @@ class UserService implements UserServiceInterface
             $user->updateCurrency($currencyCode);
             $this->userRepository->save([$user]);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }
@@ -98,7 +99,7 @@ class UserService implements UserServiceInterface
             $user->updateReportPeriod($reportPeriod);
             $this->userRepository->save([$user]);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }

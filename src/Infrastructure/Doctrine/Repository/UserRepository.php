@@ -10,12 +10,10 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\Identifier;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\UserRepositoryInterface;
+use App\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
+use App\Infrastructure\Doctrine\Repository\Traits\SaveEntityTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
-use Ramsey\Uuid\Uuid;
-use RuntimeException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -28,17 +26,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryInterface
 {
+    use SaveEntityTrait;
+    use NextIdentityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
-    }
-
-    public function getNextIdentity(): Id
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $uuid = Uuid::uuid4();
-
-        return new Id($uuid->toString());
     }
 
     /**
@@ -53,22 +45,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->updatePassword($newEncodedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function save(array $users): void
-    {
-        try {
-            foreach ($users as $user) {
-                $this->getEntityManager()->persist($user);
-            }
-
-            $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
     }
 
     public function loadByIdentifier(Identifier $identifier): User

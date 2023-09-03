@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Factory;
 
+use DateTimeInterface;
 use App\Domain\Entity\Transaction;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\TransactionType;
@@ -44,7 +45,7 @@ class TransactionFactory implements TransactionFactoryInterface
     public function createCorrection(
         Id $accountId,
         float $correction,
-        \DateTimeInterface $transactionDate,
+        DateTimeInterface $transactionDate,
         string $comment = ''
     ): Transaction {
         $account = $this->accountRepository->get($accountId);

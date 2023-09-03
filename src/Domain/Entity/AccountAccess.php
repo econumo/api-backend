@@ -22,7 +22,7 @@ class AccountAccess
         private Account $account,
         private User $user,
         private AccountUserRole $role,
-        \DateTimeInterface $createdAt
+        DateTimeInterface $createdAt
     ) {
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));

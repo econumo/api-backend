@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use RuntimeException;
+use Throwable;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Generator;
@@ -68,7 +70,7 @@ HELP);
         $delete = (bool) $input->getOption('delete');
 
         if (!in_array($httpMethod, ['GET', 'POST'], true)) {
-            throw new \RuntimeException('Wrong HTTP method');
+            throw new RuntimeException('Wrong HTTP method');
         }
 
         if (
@@ -78,7 +80,7 @@ HELP);
                 $matches,
             )
         ) {
-            throw new \RuntimeException('Wrong URL');
+            throw new RuntimeException('Wrong URL');
         }
 
         $module = implode(
@@ -180,7 +182,7 @@ HELP);
             if ($delete) {
                 try {
                     $filesystem->remove($path);
-                } catch (\Throwable $throwable) {
+                } catch (Throwable $throwable) {
                     $io->write($throwable->getMessage());
                 }
 

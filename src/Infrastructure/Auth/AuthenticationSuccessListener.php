@@ -14,10 +14,7 @@ class AuthenticationSuccessListener
     {
     }
 
-    /**
-     * @param AuthenticationSuccessEvent $event
-     */
-    public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event)
+    public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event): void
     {
         $data = $event->getData();
         $user = $event->getUser();
@@ -25,6 +22,7 @@ class AuthenticationSuccessListener
         if (!$user instanceof User) {
             return;
         }
+
         $data['user'] = $this->currentUserToDtoResultAssembler->assemble($user);
         $event->setData($data);
     }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Exception;
 
-
-class OperationObjectLockedException extends \RuntimeException
+use RuntimeException;
+class OperationObjectLockedException extends RuntimeException
 {
 }

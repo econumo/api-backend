@@ -10,12 +10,10 @@ use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountAccessRepositoryInterface;
+use App\Infrastructure\Doctrine\Repository\Traits\SaveEntityTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
-use RuntimeException;
 
 /**
  * @method AccountAccess|null find($id, $lockMode = null, $lockVersion = null)
@@ -25,25 +23,11 @@ use RuntimeException;
  */
 class AccountAccessRepository extends ServiceEntityRepository implements AccountAccessRepositoryInterface
 {
+    use SaveEntityTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, AccountAccess::class);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function save(array $items): void
-    {
-        try {
-            foreach ($items as $item) {
-                $this->getEntityManager()->persist($item);
-            }
-
-            $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
     }
 
     /**

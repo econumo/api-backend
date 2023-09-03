@@ -11,14 +11,13 @@ interface UserOptionRepositoryInterface
     public function getNextIdentity(): Id;
 
     /**
-     * @param UserOption[] $userOptions
+     * @param UserOption[] $items
      */
-    public function save(array $userOptions): void;
+    public function save(array $items): void;
 
     public function delete(UserOption $userOption): void;
 
     /**
-     * @param Id $userId
      * @return UserOption[]
      */
     public function findByUserId(Id $userId): array;

@@ -23,7 +23,7 @@ interface AccountOptionsRepositoryInterface
     public function delete(AccountOptions $options): void;
 
     /**
-     * @param AccountOptions[] $accountOptions
+     * @param AccountOptions[] $items
      */
-    public function save(array $accountOptions): void;
+    public function save(array $items): void;
 }

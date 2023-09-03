@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Controller;
 
+use Exception;
 use App\Infrastructure\OpenExchangeRates\CurrencyExchangeUsageService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,7 +37,7 @@ class HealthCheckController extends AbstractController
         $status = true;
         try {
             $response['database'] = $this->entityManager->getConnection()->connect();
-        } catch (\Exception) {
+        } catch (Exception) {
             $response['database'] = false;
             $status = false;
         }

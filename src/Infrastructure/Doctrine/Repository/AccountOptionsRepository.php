@@ -10,12 +10,10 @@ use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountOptionsRepositoryInterface;
+use App\Infrastructure\Doctrine\Repository\Traits\SaveEntityTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
-use RuntimeException;
 
 /**
  * @method AccountOptions|null find($id, $lockMode = null, $lockVersion = null)
@@ -25,6 +23,8 @@ use RuntimeException;
  */
 class AccountOptionsRepository extends ServiceEntityRepository implements AccountOptionsRepositoryInterface
 {
+    use SaveEntityTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, AccountOptions::class);
@@ -39,22 +39,6 @@ class AccountOptionsRepository extends ServiceEntityRepository implements Accoun
             ->orderBy('ao.position', Criteria::ASC)
             ->getQuery()
             ->getResult();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function save(array $accountOptions): void
-    {
-        try {
-            foreach ($accountOptions as $position) {
-                $this->getEntityManager()->persist($position);
-            }
-
-            $this->getEntityManager()->flush();
-        } catch (ORMException|ORMInvalidArgumentException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
     }
 
     /**

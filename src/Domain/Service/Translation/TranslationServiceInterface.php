@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Service\Translation;
 
-
+use InvalidArgumentException;
 interface TranslationServiceInterface
 {
     /**
@@ -51,7 +51,7 @@ interface TranslationServiceInterface
      *
      * @return string The translated string
      *
-     * @throws \InvalidArgumentException If the locale contains invalid characters
+     * @throws InvalidArgumentException If the locale contains invalid characters
      */
     public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string;
 }

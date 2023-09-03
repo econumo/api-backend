@@ -9,11 +9,9 @@ use App\Domain\Entity\ValueObject\ConnectionCode;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\ConnectionInviteRepositoryInterface;
+use App\Infrastructure\Doctrine\Repository\Traits\SaveEntityTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
-use RuntimeException;
 
 /**
  * @method ConnectionInvite|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,25 +21,11 @@ use RuntimeException;
  */
 class ConnectionInviteRepository extends ServiceEntityRepository implements ConnectionInviteRepositoryInterface
 {
+    use SaveEntityTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ConnectionInvite::class);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function save(array $items): void
-    {
-        try {
-            foreach ($items as $item) {
-                $this->getEntityManager()->persist($item);
-            }
-
-            $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
     }
 
     public function getByUser(Id $userId): ?ConnectionInvite

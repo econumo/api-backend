@@ -168,7 +168,7 @@ class AccountService implements AccountServiceInterface
             $this->accountOptionsRepository->save($tmpOptions);
             $this->folderRepository->save($folders);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }

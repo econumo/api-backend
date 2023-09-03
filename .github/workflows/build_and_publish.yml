@@ -1,17 +1,25 @@
-name: "Build and publish to Docker Hub"
 on:
-    push:
-        branches:
-            - master
+    workflow_call:
+        inputs:
+            DOCKER_IMAGE_APP:
+                required: true
+                type: string
+        secrets:
+            DOCKER_LOGIN:
+                required: true
+            DOCKER_PASSWORD:
+                required: true
+            APP_QASE_TOKEN:
+                required: true
 
 jobs:
-    docker_hub_publish:
-        name: docker_hub_publish
+    build_and_publish:
+        name: build_and_publish
         runs-on: ubuntu-latest
         env:
             DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
             DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-            DOCKER_IMAGE_APP: "econumo/api-backend:latest"
+            DOCKER_IMAGE_APP: ${{ inputs.DOCKER_IMAGE_APP }}
 
         services:
             postgresql:

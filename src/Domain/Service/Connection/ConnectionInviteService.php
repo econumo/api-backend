@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Service\Connection;
 
+use Throwable;
 use App\Domain\Entity\ConnectionInvite;
 use App\Domain\Entity\ValueObject\ConnectionCode;
 use App\Domain\Entity\ValueObject\Id;
@@ -62,7 +63,7 @@ class ConnectionInviteService implements ConnectionInviteServiceInterface
             $this->connectionInviteRepository->save([$connectionInvite]);
 
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }

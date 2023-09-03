@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity repository-class="App\Infrastructure\Doctrine\Repository\BudgetRepository" name="App\Domain\Entity\Budget"
+            table="budgets">
+        <id name="id" type="uuid" column="id"/>
+        <field name="name" type="budget_name_type" column="name" length="64" nullable="false"/>
+        <field name="amount" type="decimal" column="amount" precision="19" scale="2" nullable="false"/>
+        <field name="icon" type="icon_type" column="icon" length="64" nullable="false"/>
+        <field name="carryOver" type="boolean" column="carry_over" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="carryOverNegative" type="boolean" column="carry_over_negative" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="carryOverStartDate" type="datetime_immutable" column="carry_over_start_date" nullable="true"/>
+        <field name="excludeTags" type="boolean" column="exclude_tags" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
+        <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
+
+        <many-to-one field="user" target-entity="App\Domain\Entity\User">
+            <join-column name="user_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+        <many-to-many field="sharedAccess" target-entity="App\Domain\Entity\User">
+            <join-table name="budget_access">
+                <join-columns>
+                    <join-column name="budget_id" referenced-column-name="id" nullable="false" on-delete="CASCADE" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="user_id" referenced-column-name="id" nullable="false" on-delete="CASCADE" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-many field="categories" target-entity="App\Domain\Entity\Category">
+            <join-table name="budget_categories">
+                <join-columns>
+                    <join-column name="budget_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="category_id" referenced-column-name="id" nullable="false" on-delete="CASCADE" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-many field="tags" target-entity="App\Domain\Entity\Tag">
+            <join-table name="budget_tags">
+                <join-columns>
+                    <join-column name="budget_id" referenced-column-name="id" nullable="false" on-delete="CASCADE" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="tag_id" referenced-column-name="id" nullable="false" on-delete="CASCADE" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+    </entity>
+</doctrine-mapping>

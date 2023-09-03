@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\Config\RectorConfig;
+use Rector\Core\Configuration\Option;
+use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
+use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\Doctrine\Set\DoctrineSetList;
@@ -19,14 +22,19 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__ . '/src',
 //        __DIR__ . '/tests',
     ]);
-
-
-    // register a single rule
-    $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);
+//    $rectorConfig->parallel();
 
     $rectorConfig->importNames();
-
-//    $rectorConfig->rule(TypedPropertyFromAssignsRector::class);
+    $rectorConfig->skip([
+        __DIR__ . '/config/bundles.php',
+//        __DIR__ . '/tests/_*',
+        ReadOnlyClassRector::class => [
+            __DIR__ . '/src/Domain/Entity/*.php',
+        ],
+        ReadOnlyPropertyRector::class => [
+            __DIR__ . '/src/Domain/Entity/*.php',
+        ],
+    ]);
 
     // define sets of rules
     $rectorConfig->sets([

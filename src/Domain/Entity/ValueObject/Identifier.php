@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity\ValueObject;
 
-final readonly class Identifier implements \Stringable
+use Stringable;
+final readonly class Identifier implements Stringable
 {
     public static function createFromEmail(Email $email): self
     {

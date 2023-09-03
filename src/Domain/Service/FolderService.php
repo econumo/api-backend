@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Service;
 
+use Throwable;
 use App\Domain\Entity\Folder;
 use App\Domain\Entity\ValueObject\FolderName;
 use App\Domain\Entity\ValueObject\Id;
@@ -69,7 +70,7 @@ final readonly class FolderService implements FolderServiceInterface
             $userId = $folder->getUserId();
             $this->folderRepository->delete($folder);
             $this->resetOrderFolders($userId);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }
@@ -98,7 +99,7 @@ final readonly class FolderService implements FolderServiceInterface
 
             $this->resetOrderFolders($userId);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }

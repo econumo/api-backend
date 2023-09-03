@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine;
 
+use Exception;
 use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Identifier;
 use App\Domain\Exception\NotFoundException;
@@ -62,7 +63,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 
         // Return a User object after making sure its data is "fresh".
         // Or throw a UserNotFoundException if the user no longer exists.
-        throw new \Exception('TODO: fill in refreshUser() inside ' . __FILE__);
+        throw new Exception('TODO: fill in refreshUser() inside ' . __FILE__);
     }
 
     /**

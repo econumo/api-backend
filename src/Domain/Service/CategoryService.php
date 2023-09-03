@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Service;
 
+use Throwable;
 use App\Domain\Entity\Category;
 use App\Domain\Entity\ValueObject\CategoryName;
 use App\Domain\Entity\ValueObject\CategoryType;
@@ -79,7 +80,7 @@ class CategoryService implements CategoryServiceInterface
             $this->transactionRepository->replaceCategory($categoryId, $newCategoryId);
             $this->categoryRepository->delete($category);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }

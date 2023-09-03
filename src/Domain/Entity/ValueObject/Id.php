@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity\ValueObject;
 
+use Stringable;
 use DomainException;
 use JsonSerializable;
 
-class Id implements JsonSerializable, \Stringable
+class Id implements JsonSerializable, Stringable
 {
-    private string $value;
+    private readonly string $value;
 
     public function __construct(string $value)
     {

@@ -17,9 +17,9 @@ interface UserRepositoryInterface
     public function getByEmail(Email $email): User;
 
     /**
-     * @param User[] $users
+     * @param User[] $items
      */
-    public function save(array $users): void;
+    public function save(array $items): void;
 
     public function get(Id $id): User;
 

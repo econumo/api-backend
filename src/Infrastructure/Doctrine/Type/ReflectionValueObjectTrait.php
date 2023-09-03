@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Type;
 
+use ReflectionException;
 use ReflectionClass;
 
 trait ReflectionValueObjectTrait
@@ -11,7 +12,7 @@ trait ReflectionValueObjectTrait
     /**
      * @param $value
      * @return mixed
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getInstance(string $className, $value)
     {

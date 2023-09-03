@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity\ValueObject;
 
+use Stringable;
 use DomainException;
 use JsonSerializable;
 
-final class TransactionType implements JsonSerializable, \Stringable
+final class TransactionType implements JsonSerializable, Stringable
 {
     /**
      * @var int
@@ -48,7 +49,7 @@ final class TransactionType implements JsonSerializable, \Stringable
         self::TRANSFER_ALIAS => self::TRANSFER,
     ];
 
-    private int $value;
+    private readonly int $value;
 
     public static function createFromAlias(string $alias): self
     {

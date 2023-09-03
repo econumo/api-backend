@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity\ValueObject;
 
+use Stringable;
 use DomainException;
 use JsonSerializable;
 
-final class AccountType implements JsonSerializable, \Stringable
+final class AccountType implements JsonSerializable, Stringable
 {
     /**
      * @var int
@@ -19,7 +20,7 @@ final class AccountType implements JsonSerializable, \Stringable
      */
     public const CREDIT_CARD = 2;
 
-    private int $value;
+    private readonly int $value;
 
     public function __construct(int $value)
     {

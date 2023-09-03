@@ -15,9 +15,7 @@ class GetOptionListV1ResultAssembler
     }
 
     /**
-     * @param GetOptionListV1RequestDto $dto
      * @param UserOption[] $options
-     * @return GetOptionListV1ResultDto
      */
     public function assemble(
         GetOptionListV1RequestDto $dto,

@@ -1,0 +1,12 @@
+name: "Build and publish MASTER branch to the Docker Hub"
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    build_and_publish_master_to_docker_hub:
+        uses: ./.github/workflows/build_and_publish.yml
+        with:
+            DOCKER_IMAGE_APP: "econumo/api-backend:latest"
+        secrets: inherit

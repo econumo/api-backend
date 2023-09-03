@@ -1,0 +1,12 @@
+name: "Build and publish DEVELOP branch to the Docker Hub"
+on:
+    push:
+        branches:
+            - develop
+
+jobs:
+    build_and_publish_develop_to_docker_hub:
+        uses: ./.github/workflows/build_and_publish.yml
+        with:
+            DOCKER_IMAGE_APP: "econumo/api-backend:develop"
+        secrets: inherit

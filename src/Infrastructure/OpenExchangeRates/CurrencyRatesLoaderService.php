@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\OpenExchangeRates;
 
+use DateTimeImmutable;
+use DateTime;
 use App\Domain\Entity\Currency;
 use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Service\Currency\CurrencyRatesLoaderServiceInterface;
@@ -45,8 +47,8 @@ class CurrencyRatesLoaderService implements CurrencyRatesLoaderServiceInterface
         ]);
         $result = [];
         $data = $response->toArray();
-        $updatedAt = \DateTimeImmutable::createFromFormat('U', (string)$data['timestamp']);
-        $currencyRateDate = \DateTime::createFromFormat('Y-m-d', $updatedAt->format('Y-m-d'));
+        $updatedAt = DateTimeImmutable::createFromFormat('U', (string)$data['timestamp']);
+        $currencyRateDate = DateTime::createFromFormat('Y-m-d', $updatedAt->format('Y-m-d'));
         $currencyRateDate->setTime(0, 0, 0, 0);
 
         $baseCode = new CurrencyCode($data['base']);

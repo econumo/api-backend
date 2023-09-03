@@ -22,9 +22,7 @@ interface PayeeServiceInterface
     public function deletePayee(Id $payeeId): void;
 
     /**
-     * @param Id $userId
      * @param PositionDto[] $changes
-     * @return void
      */
     public function orderPayees(Id $userId, array $changes): void;
 

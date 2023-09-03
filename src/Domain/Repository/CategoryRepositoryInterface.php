@@ -24,9 +24,9 @@ interface CategoryRepositoryInterface
     public function get(Id $id): Category;
 
     /**
-     * @param Category[] $categories
+     * @param Category[] $items
      */
-    public function save(array $categories): void;
+    public function save(array $items): void;
 
     public function getReference(Id $id): Category;
 

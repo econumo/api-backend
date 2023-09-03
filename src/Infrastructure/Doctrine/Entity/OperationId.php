@@ -45,7 +45,7 @@ class OperationId
     public function markHandled(): void
     {
         $this->isHandled = true;
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function isHandled(): bool

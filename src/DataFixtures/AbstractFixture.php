@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ObjectManager;
@@ -22,7 +23,7 @@ abstract class AbstractFixture extends Fixture
     }
 
     /**
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      * @throws Exception
      */
     public function load(ObjectManager $manager): void

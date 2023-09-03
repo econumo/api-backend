@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Category\Category\Validation;
 
+use Symfony\Component\Form\Form;
 use App\Application\Category\Dto\DeleteCategoryV1RequestDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -45,7 +46,7 @@ class DeleteCategoryV1Form extends AbstractType
             return;
         }
 
-        /** @var \Symfony\Component\Form\Form $form */
+        /** @var Form $form */
         $form = $context->getRoot();
         /** @var DeleteCategoryV1RequestDto $dto */
         $dto = $form->getData();

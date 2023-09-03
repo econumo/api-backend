@@ -10,7 +10,6 @@ interface CurrencyRatesUpdateServiceInterface
 {
     /**
      * @param CurrencyRateDto[] $currencyRates
-     * @return int
      */
     public function updateCurrencyRates(array $currencyRates): int;
 }

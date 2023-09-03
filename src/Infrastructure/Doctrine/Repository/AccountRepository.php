@@ -10,13 +10,12 @@ use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountRepositoryInterface;
+use App\Infrastructure\Doctrine\Repository\Traits\DeleteEntityTrait;
+use App\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
+use App\Infrastructure\Doctrine\Repository\Traits\SaveEntityTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
-use Ramsey\Uuid\Uuid;
-use RuntimeException;
 
 /**
  * @method Account|null find($id, $lockMode = null, $lockVersion = null)
@@ -26,33 +25,12 @@ use RuntimeException;
  */
 class AccountRepository extends ServiceEntityRepository implements AccountRepositoryInterface
 {
+    use SaveEntityTrait;
+    use NextIdentityTrait;
+    use DeleteEntityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Account::class);
-    }
-
-    public function getNextIdentity(): Id
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $uuid = Uuid::uuid4();
-
-        return new Id($uuid->toString());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function save(array $accounts): void
-    {
-        try {
-            foreach ($accounts as $account) {
-                $this->getEntityManager()->persist($account);
-            }
-
-            $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
     }
 
     /**
@@ -104,13 +82,6 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
         }
 
         return $item;
-    }
-
-    public function delete(Id $id): void
-    {
-        $account = $this->get($id);
-        $this->getEntityManager()->remove($account);
-        $this->getEntityManager()->flush();
     }
 
     public function getReference(Id $id): Account

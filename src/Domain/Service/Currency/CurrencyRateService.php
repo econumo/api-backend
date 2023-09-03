@@ -18,7 +18,7 @@ class CurrencyRateService implements CurrencyRateServiceInterface
     /**
      * @inheritDoc
      */
-    public function getCurrencyRates(\DateTimeInterface $dateTime): array
+    public function getCurrencyRates(DateTimeInterface $dateTime): array
     {
         return $this->currencyRateRepository->getAll($dateTime);
     }

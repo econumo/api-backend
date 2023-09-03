@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity\ValueObject;
 
+use Stringable;
 use App\Domain\Exception\DomainException;
 
-final class Email implements \Stringable
+final class Email implements Stringable
 {
-    private string $value;
+    private readonly string $value;
 
     public function __construct(string $email)
     {

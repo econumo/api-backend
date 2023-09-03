@@ -111,4 +111,15 @@ return [
         'created_at' => '2021-08-12 19:43:09',
         'updated_at' => '2021-08-12 19:43:09',
     ],
+    [
+        'id' => '45923d73-66a9-4a39-8da0-f10140d93e3f',
+        'user_id' => '77be9577-147b-4f05-9aa7-91d9b159de5b',
+        'name' => 'Dany Groceries',
+        'position' => 1,
+        'type' => 0,
+        'icon' => 'food',
+        'is_archived' => 0,
+        'created_at' => '2021-08-12 19:43:09',
+        'updated_at' => '2021-08-12 19:43:09',
+    ],
 ];

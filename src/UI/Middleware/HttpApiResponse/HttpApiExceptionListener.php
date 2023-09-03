@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Middleware\HttpApiResponse;
 
+use Throwable;
 use App\Application\Exception\AccessDeniedException;
 use App\Application\Exception\ValidationException;
 use App\UI\Service\Response\ResponseFactory;
@@ -17,7 +18,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 class HttpApiExceptionListener
 {
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function onKernelException(ExceptionEvent $event): void
     {

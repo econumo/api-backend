@@ -9,6 +9,8 @@ use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\FolderRepositoryInterface;
+use App\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
+use App\Infrastructure\Doctrine\Repository\Traits\SaveEntityTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Exception\ORMException;
@@ -25,17 +27,11 @@ use RuntimeException;
  */
 class FolderRepository extends ServiceEntityRepository implements FolderRepositoryInterface
 {
+    use NextIdentityTrait;
+    use SaveEntityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Folder::class);
-    }
-
-    public function getNextIdentity(): Id
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $uuid = Uuid::uuid4();
-
-        return new Id($uuid->toString());
     }
 
     /**
@@ -54,22 +50,6 @@ class FolderRepository extends ServiceEntityRepository implements FolderReposito
         }
 
         return $item;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function save(array $items): void
-    {
-        try {
-            foreach ($items as $item) {
-                $this->getEntityManager()->persist($item);
-            }
-
-            $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
     }
 
     public function delete(Folder $folder): void

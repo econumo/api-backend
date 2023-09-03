@@ -10,11 +10,9 @@ use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountAccessInviteRepositoryInterface;
+use App\Infrastructure\Doctrine\Repository\Traits\SaveEntityTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
-use RuntimeException;
 
 /**
  * @method AccountAccessInvite|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,25 +22,11 @@ use RuntimeException;
  */
 class AccountAccessInviteRepository extends ServiceEntityRepository implements AccountAccessInviteRepositoryInterface
 {
+    use SaveEntityTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, AccountAccessInvite::class);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function save(array $items): void
-    {
-        try {
-            foreach ($items as $item) {
-                $this->getEntityManager()->persist($item);
-            }
-
-            $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
     }
 
     public function get(Id $accountId, Id $recipientId): AccountAccessInvite

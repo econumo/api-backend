@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Domain\Service;
 
 
+use Throwable;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\AccountAccessInvite;
 use App\Domain\Entity\ValueObject\AccountUserRole;
@@ -58,7 +59,7 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
             );
             $this->accountAccessInviteRepository->save([$invite]);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }
@@ -84,7 +85,7 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
             $this->accountOptionsRepository->save([$accountOptions]);
 
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
             throw $throwable;
         }
